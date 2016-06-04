@@ -12,11 +12,15 @@
 (def stats (js/Stats))
 
 (def initial-elements
-  {:ball {:x 0 :y 0 :z 0}
+  {:ball {:position {:x 0 :y 0 :z 0}
+          :velocity {:x 1 :y 1}
+          :hit false}
    :paddle-1 {:position {:x (paddle-x :left) :y 0 :z paddle-depth}
-              :side :left}
+              :side :left
+              :collide false}
    :paddle-2 {:position {:x (paddle-x :right) :y 0 :z paddle-depth}
-              :side :right}})
+              :side :right
+              :collide false}})
 
 (defn clean-up-node [node]
   (while (.-firstChild node) (.removeChild node (.-firstChild node))))
