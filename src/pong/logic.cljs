@@ -30,7 +30,57 @@
         (alert-invalid-move-for-paddle paddle)))
     paddle))
 
+;;
+;; Ball Physics
+;; -----------------------------------------------------------------------------
+
+(defn boundary-collision-velocity-alteration [{{y :y} :position :as ball}]
+  "If the ball collides with the world boundaries (y-axis), vy gets inverted"
+  (let [half-boundary (/ (:height field-size) 2)]
+    (if (or (<= y (- half-boundary))
+            (>= y half-boundary))
+      (update-in ball [:velocity :y] -)
+      ball)))
+
+(defn paddle-collision-velocity-alteration
+  [{{bx :x by :y} :position ball-velocity :velocity :as ball}
+   {{px :x py :y} :position side :side}]
+  "If the ball collides with paddles, vx gets inverted and vy gets slightly
+  modified"
+  (let [op (if (= side :left) < >)
+        ball-towards-paddle (op (:x ball-velocity) 0)
+        half-paddle-height (/ paddle-height 2)]
+    (if (and ball-towards-paddle
+             (<= bx (+ px paddle-width))
+             (>= bx px)                            ; Hitting paddle in x-axis
+             (<= by (+ py half-paddle-height))
+             (>= by (- py half-paddle-height)))    ; Ball and paddle vertically aligned y-axis
+      (-> ball
+          (assoc :hit true)
+          (update-in [:velocity :x] -))            ; TODO: make y more aggresive
+      ball)))
+
+(defn alter-velocity [ball paddle-1 paddle-2]
+  "Returns a new ball with its velocity altered"
+  (-> ball
+      boundary-collision-velocity-alteration
+      (paddle-collision-velocity-alteration paddle-1)
+      (paddle-collision-velocity-alteration paddle-2)))
+
+(defn update-ball [ball paddle-1 paddle-2]
+  (let [update-position (fn [b axis]
+                          (update-in b [:position axis] + (-> b :velocity axis)))]
+    (-> ball
+        (alter-velocity paddle-1 paddle-2)
+        (update-position :x)
+        (update-position :y))))
+
+
+;;
+;; General Logic
+;; -----------------------------------------------------------------------------
+
 (defn update-logic [{:keys [paddle-1 paddle-2 ball]}]
-  {:paddle-1 (new-paddle-position paddle-1)
-   :paddle-2 (new-paddle-position paddle-2)
-   :ball ball})
+  {:paddle-1 (update-paddle paddle-1)
+   :paddle-2 (update-paddle paddle-2)
+   :ball (update-ball ball paddle-1 paddle-2)})
