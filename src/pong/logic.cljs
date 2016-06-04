@@ -1,13 +1,17 @@
 (ns pong.logic
   (:require [pong.controls :refer [paddle-movement]]
             [pong.defs :refer [field-size]]
-            [pong.game-objects :refer [paddle-speed]]))
+            [pong.game-objects :refer [paddle-height paddle-speed paddle-width]]))
 
 
-(defn alert-invalid-move-for-paddle [{:keys [side] :as paddle}]
+;;
+;; Paddle Physics
+;; -----------------------------------------------------------------------------
+
+(defn alert-invalid-move-for-paddle [{:keys [collide] :as paddle}]
   ;; (update curr-position :z #(* (- 10 %) 0.2))
-  (println "boundary reached" side)
-  paddle)
+  (println "boundary reached" (:side paddle))
+  (assoc paddle :collide true))  ; Still missing turning it back to false.
 
 (defn move-paddle [paddle direction]
   (let [op (if (= direction :up) + -)]
@@ -18,7 +22,7 @@
     (and (< y half-boundary)
          (> y (- half-boundary)))))
 
-(defn new-paddle-position [{:keys [side] :as paddle}]
+(defn update-paddle [{:keys [side] :as paddle}]
   (if-let [direction (get @paddle-movement side)]
     (let [new-paddle (move-paddle paddle direction)]
       (if (paddle-within-boundaries (:position new-paddle))
