@@ -121,17 +121,18 @@
 (defn player-score [player scores]
   (count (filter #{player} scores)))
 
-(defn game-over []
+(defn game-over? []
   (or (= (player-score :player-1 @scores) up-to-wins)
       (= (player-score :player-2 @scores) up-to-wins)))
 
-(defn update-movement [{:keys [paddle-1 paddle-2 ball]}]
-  (if (not (game-over))
+(defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
+  (if (not (game-over?))
     {:paddle-1 (-update-paddle paddle-1)
      :paddle-2 (-update-paddle paddle-2)
-     :ball (-update-ball ball paddle-1 paddle-2)}))
+     :ball (-update-ball ball paddle-1 paddle-2)}
+    elems))
 
 (defn match-score [{{x :x} :position}]
-  (if (-scored? x)
+  (if (and (not (game-over?)) (-scored? x))
     (let [scorer (if (> x 0) :player-1 :player-2)]
       (swap! scores conj scorer))))
