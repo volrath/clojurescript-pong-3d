@@ -11,7 +11,8 @@
                  [weasel "0.7.0"]
                  [org.clojure/tools.nrepl "0.2.12"]
                  [compojure "1.5.0"]
-                 [cljsjs/three "0.0.76-0"]])
+                 [cljsjs/three "0.0.76-0"]
+                 [rum "0.9.0"]])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
