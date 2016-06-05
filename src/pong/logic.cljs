@@ -61,13 +61,29 @@
     (and (< y half-boundary)
          (> y (- half-boundary)))))
 
-(defn -update-paddle [{:keys [side] :as paddle}]
+(defn -control-paddle [{:keys [side] :as paddle}]
   (if-let [direction (get @paddle-movement side)]
     (let [new-paddle (-move-paddle paddle direction)]
       (if (-paddle-within-boundaries (:position new-paddle))
         new-paddle
         (-alert-invalid-move-for-paddle paddle)))
     (assoc paddle :direction nil)))
+
+(defn -ai-opponent-paddle
+  [{{py :y} :position :as paddle}  ; paddle
+   {{by :y} :position}             ; ball
+   reflexes]
+  "Creates a super simple Lerp-ed AI to play against. It uses `reflexes` to set
+  its difficulty: 0 easiest; 1 hardest. If calculated `new-y` is higher than
+  permitted `paddle-speed` we clamp it to avoid cheating."
+  (let [new-y (* (- by py) reflexes)]
+    (if (= new-y 0)
+      (assoc paddle :direction nil)
+      (let [clamp-op (if (> new-y 0) max min)
+            direction (if (> new-y 0) :up :down)]
+        (-> paddle
+            (update-in [:position :y] + (clamp-op paddle-speed new-y))
+            (update :direction direction))))))
 
 ;;
 ;; Ball Physics
@@ -155,8 +171,10 @@
 
 (defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
   (if (not (game-over?))
-    {:paddle-1 (-update-paddle paddle-1)
-     :paddle-2 (-update-paddle paddle-2)
+    ;; {:paddle-1 (-control-paddle paddle-1)
+    ;; :paddle-2 (-control-paddle paddle-2)
+    {:paddle-1 (-ai-opponent-paddle paddle-1 ball 0.2)
+     :paddle-2 (-ai-opponent-paddle paddle-2 ball 0.1)
      :ball (-update-ball ball paddle-1 paddle-2)}
     elems))
 
