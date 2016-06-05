@@ -16,13 +16,18 @@
    :collide false})
 
 ;;
-;; Game Elements ----
+;; Game Elements
+;; -----------------------------------------------------------------------------
+
 (def elements
   {:ball {:position {:x 0 :y 0 :z 0}
           :velocity {:x 1 :y 1}
           :hit false}
    :paddle-1 (-create-paddle :left)
    :paddle-2 (-create-paddle :right)})
+
+(def score (atom {:player-1 0
+                  :player-2 0}))
 
 
 ;;
