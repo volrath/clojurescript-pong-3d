@@ -22,12 +22,6 @@
 (def paddle-2-material (js/THREE.MeshLambertMaterial. (js-obj "color" 0xFF4045)))
 (def paddle-2 (js/THREE.Mesh. paddle-2-geometry paddle-2-material))
 
-(defn paddle-x [pos]
-  (let [border-dist (/ (:width field-size) 2)]
-    (if (= pos :left)
-      (+ (- border-dist) paddle-width)
-      (- border-dist paddle-width))))
-
 ;; Should be in a logic module?
 ;; (set! (-> paddle-1 .-position .-x) (+ (- ) paddle-width))
 ;; (set! (-> paddle-2 .-position .-x) (- (/ (:width field-size) 2) paddle-width))
