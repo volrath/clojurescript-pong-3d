@@ -5,7 +5,8 @@
 
 (def paddle-speed 2)
 (def ball-min-speed 0.5)
-(def ball-max-speed 2)
+(def ball-max-speed 2.5)
+(def ball-speed-alteration 0.5)
 
 (defn -paddle-x [pos]
   (let [border-dist (/ (:width field-size) 2)]
@@ -94,7 +95,7 @@
   (if direction
     (let [ndy (/ dy (js/Math.abs dy))  ; normalized vy
           paddle-scalar-direction (if (= direction :up) 1 -1)
-          alteration (* ndy paddle-scalar-direction 0.3)]
+          alteration (* ndy paddle-scalar-direction ball-speed-alteration)]
       (update ball :speed #(-> %
                                (+ alteration)
                                (min ball-max-speed)
