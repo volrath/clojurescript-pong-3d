@@ -1,6 +1,6 @@
 (ns pong.logic
   (:require [pong.controls :refer [paddle-movement]]
-            [pong.defs :refer [field-size]]
+            [pong.defs :refer [field-size up-to-wins]]
             [pong.game-objects :refer [paddle-depth paddle-height paddle-speed paddle-width]]))
 
 
@@ -15,19 +15,22 @@
    :side side
    :collide false})
 
+(defn -create-ball [pointing-to]
+  (let [vx (if (= pointing-to :player-1) -1 1)]
+    {:position {:x 0 :y 0 :z 0}
+     :velocity {:x vx :y (rand-nth [1 -1])}
+     :hit false}))
+
 ;;
 ;; Game Elements
 ;; -----------------------------------------------------------------------------
 
 (def elements
-  {:ball {:position {:x 0 :y 0 :z 0}
-          :velocity {:x 1 :y 1}
-          :hit false}
+  {:ball (-create-ball (rand-nth [:player-1 :player-2]))
    :paddle-1 (-create-paddle :left)
    :paddle-2 (-create-paddle :right)})
 
-(def score (atom {:player-1 0
-                  :player-2 0}))
+(def scores (atom '()))  ; Stack of scorers, maybe later I'll add 'scoring time'
 
 
 ;;
@@ -59,6 +62,12 @@
 ;;
 ;; Ball Physics
 ;; -----------------------------------------------------------------------------
+
+(defn -scored? [x]
+  (> (js/Math.abs x) (/ (:width field-size) 2)))
+
+(defn -reset-ball []
+  (-create-ball (first @scores)))
 
 (defn -boundary-collision-velocity-alteration [{{y :y} :position :as ball}]
   "If the ball collides with the world boundaries (y-axis), vy gets inverted"
@@ -94,19 +103,35 @@
       (-paddle-collision-velocity-alteration paddle-2)))
 
 (defn -update-ball [ball paddle-1 paddle-2]
-  (let [update-position (fn [b axis]
+  (let [{{ball-x :x} :position} ball
+        update-position (fn [b axis]
                           (update-in b [:position axis] + (-> b :velocity axis)))]
-    (-> ball
-        (-alter-velocity paddle-1 paddle-2)
-        (update-position :x)
-        (update-position :y))))
+    (if (-scored? ball-x)
+      (-reset-ball)
+      (-> ball
+          (-alter-velocity paddle-1 paddle-2)
+          (update-position :x)
+          (update-position :y)))))
 
 
 ;;
 ;; General Logic
 ;; -----------------------------------------------------------------------------
 
+(defn player-score [player scores]
+  (count (filter #{player} scores)))
+
+(defn game-over []
+  (or (= (player-score :player-1 @scores) up-to-wins)
+      (= (player-score :player-2 @scores) up-to-wins)))
+
 (defn update-movement [{:keys [paddle-1 paddle-2 ball]}]
-  {:paddle-1 (-update-paddle paddle-1)
-   :paddle-2 (-update-paddle paddle-2)
-   :ball (-update-ball ball paddle-1 paddle-2)})
+  (if (not (game-over))
+    {:paddle-1 (-update-paddle paddle-1)
+     :paddle-2 (-update-paddle paddle-2)
+     :ball (-update-ball ball paddle-1 paddle-2)}))
+
+(defn match-score [{{x :x} :position}]
+  (if (-scored? x)
+    (let [scorer (if (> x 0) :player-1 :player-2)]
+      (swap! scores conj scorer))))

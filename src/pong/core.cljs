@@ -3,7 +3,7 @@
             [pong.components :refer [game-container]]
             [pong.controls :refer [controls-listen paddle-movement]]
             [pong.defs :refer [canvas-size]]
-            [pong.logic :refer [update-movement] :as logic]
+            [pong.logic :refer [match-score update-movement] :as logic]
             [pong.scene :refer [camera renderer scene update-object-positions!]]
             [rum.core :as rum]))
 
@@ -16,6 +16,7 @@
   (let [elements (update-movement elements)]
     (update-object-positions! elements)
     (.render renderer scene camera)
+    (match-score (:ball elements))
     (js/requestAnimationFrame (partial main-loop elements))))
 
 (defn init []

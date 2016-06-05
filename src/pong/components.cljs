@@ -1,15 +1,15 @@
 (ns pong.components
-  (:require [pong.logic :refer [score]]
+  (:require [pong.defs :refer [up-to-wins]]
+            [pong.logic :refer [player-score scores]]
             [rum.core :as rum]))
 
-(def p1-score (rum/cursor score [:player-1]))
-(def p2-score (rum/cursor score [:player-2]))
-
 (rum/defc -score-board < rum/reactive []
-  [:div#score-board
-   [:h1#scores (str (rum/react p1-score) " - " (rum/react p2-score))]
-   [:h1#title "- 3D Pong -"]
-   [:h2#winner-board "First to 7 wins!"]])
+  (let [p1-score (player-score :player-1 (rum/react scores))
+        p2-score (player-score :player-2 (rum/react scores))]
+    [:div#score-board
+     [:h1#scores (str p1-score " - " p2-score)]
+     [:h1#title "- 3D Pong -"]
+     [:h2#winner-board (str "First to " up-to-wins " wins!")]]))
 
 (def mount-scene
   {:did-mount (fn [state]
