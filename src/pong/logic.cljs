@@ -6,8 +6,8 @@
 
 (def paddle-speed 2)
 (def ball-min-speed 1)
-(def ball-max-speed 2.5)
-(def ball-angle-alteration 0.7)
+(def ball-max-speed 4)
+(def ball-angle-alteration 0.6)
 (def ball-speed-alteration 0.4)
 
 (defn -paddle-x [pos]
@@ -25,8 +25,8 @@
 (defn -create-ball [pointing-to]
   (let [vx (if (= pointing-to :player-1) -1 1)]
     {:position (new-vector 0 0)
-     :direction (normalize (new-vector vx (rand-nth [1 -1]))) ; velocity's direction
-     :speed 1.5
+     :direction (normalize (new-vector vx (rand-nth [2 1 -1 -2]))) ; velocity's direction
+     :speed 2
      :hit false}))
 
 ;;
