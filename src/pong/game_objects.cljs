@@ -14,7 +14,6 @@
 (def paddle-height 30)
 (def paddle-depth 10)
 (def paddle-quality 1)
-(def paddle-speed 2)
 (def paddle-1-geometry (js/THREE.CubeGeometry. paddle-width paddle-height paddle-depth paddle-quality paddle-quality))
 (def paddle-1-material (js/THREE.MeshLambertMaterial. (js-obj "color" 0x1B32C0)))
 (def paddle-1 (js/THREE.Mesh. paddle-1-geometry paddle-1-material))

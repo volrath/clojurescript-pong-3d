@@ -1,8 +1,9 @@
 (ns pong.logic
   (:require [pong.controls :refer [paddle-movement]]
             [pong.defs :refer [field-size up-to-wins]]
-            [pong.game-objects :refer [paddle-depth paddle-height paddle-speed paddle-width]]))
+            [pong.game-objects :refer [paddle-depth paddle-height paddle-width]]))
 
+(def paddle-speed 2)
 
 (defn -paddle-x [pos]
   (let [border-dist (/ (:width field-size) 2)]
