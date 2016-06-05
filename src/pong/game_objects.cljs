@@ -20,9 +20,3 @@
 (def paddle-2-geometry (js/THREE.CubeGeometry. paddle-width paddle-height paddle-depth paddle-quality paddle-quality))
 (def paddle-2-material (js/THREE.MeshLambertMaterial. (js-obj "color" 0xFF4045)))
 (def paddle-2 (js/THREE.Mesh. paddle-2-geometry paddle-2-material))
-
-;; Should be in a logic module?
-;; (set! (-> paddle-1 .-position .-x) (+ (- ) paddle-width))
-;; (set! (-> paddle-2 .-position .-x) (- (/ (:width field-size) 2) paddle-width))
-;; (set! (-> paddle-1 .-position .-z) paddle-depth)
-;; (set! (-> paddle-2 .-position .-z) paddle-depth)
