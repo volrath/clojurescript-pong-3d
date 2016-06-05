@@ -5,9 +5,10 @@
             [pong.utils :refer [new-vector normalize v-scalar-* v+]]))
 
 (def paddle-speed 2)
-(def ball-min-speed 0.5)
+(def ball-min-speed 1)
 (def ball-max-speed 2.5)
-(def ball-speed-alteration 0.5)
+(def ball-angle-alteration 0.7)
+(def ball-speed-alteration 0.4)
 
 (defn -paddle-x [pos]
   (let [border-dist (/ (:width field-size) 2)]
@@ -25,7 +26,7 @@
   (let [vx (if (= pointing-to :player-1) -1 1)]
     {:position (new-vector 0 0)
      :direction (normalize (new-vector vx (rand-nth [1 -1]))) ; velocity's direction
-     :speed 1
+     :speed 1.5
      :hit false}))
 
 ;;
@@ -97,10 +98,13 @@
     (let [ndy (/ dy (js/Math.abs dy))  ; normalized vy
           paddle-scalar-direction (if (= direction :up) 1 -1)
           alteration (* ndy paddle-scalar-direction ball-speed-alteration)]
-      (update ball :speed #(-> %
-                               (+ alteration)
-                               (min ball-max-speed)
-                               (max ball-min-speed))))
+      (-> ball
+          (update-in [:direction :y] #(- % (* paddle-scalar-direction ball-angle-alteration)))
+          (update :direction normalize)
+          (update :speed #(-> %
+                              (+ alteration)
+                              (min ball-max-speed)
+                              (max ball-min-speed)))))
     ball))
 
 (defn -paddle-collision-velocity-alteration
