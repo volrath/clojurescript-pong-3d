@@ -15,10 +15,8 @@
 
 (defrecord Vector [x y z]
   I3DVector
-  (v+ [v1 v2]
-    (let [{v1x :x v1y :y v1z :z} v1
-          {v2x :x v2y :y v2z :z} v2]
-      (Vector. (+ v1x v2x) (+ v1y v2y) (+ v1z v2z))))
+  (v+ [{v1x :x v1y :y v1z :z} {v2x :x v2y :y v2z :z}]
+    (Vector. (+ v1x v2x) (+ v1y v2y) (+ v1z v2z)))
 
   (v-scalar-* [{:keys [x y z]} s] (Vector. (* x s) (* y s) (* z s)))
 

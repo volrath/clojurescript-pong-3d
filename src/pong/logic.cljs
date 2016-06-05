@@ -129,16 +129,13 @@
       (-paddle-collision-velocity-alteration paddle-1)
       (-paddle-collision-velocity-alteration paddle-2)))
 
-(defn -update-ball [ball paddle-1 paddle-2]
-  (let [{{ball-x :x} :position speed :speed} ball
-        update-position (fn [b axis]
-                          (update-in b [:position axis] + (-> b :direction axis (* speed))))]
-    (if (-scored? ball-x)
-      (-reset-ball)
-      (-> ball
-          (-alter-velocity paddle-1 paddle-2)
-          (update-position :x)
-          (update-position :y)))))
+(defn -update-ball [{{old-ball-x :x} :position :as old-ball} paddle-1 paddle-2]
+  (if (-scored? old-ball-x)
+    (-reset-ball)
+    (let [new-ball (-alter-velocity old-ball paddle-1 paddle-2)
+          {:keys [direction speed]} new-ball
+          velocity (v-scalar-* direction speed)]
+      (update new-ball :position v+ velocity))))
 
 
 ;;
