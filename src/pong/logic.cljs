@@ -20,7 +20,7 @@
   {:position (new-vector (-paddle-x side) 0 paddle-depth)
    :direction nil
    :side side
-   :collide false})
+   :collided false})
 
 (defn -create-ball [pointing-to]
   (let [vx (if (= pointing-to :player-1) -1 1)]
@@ -45,11 +45,6 @@
 ;; Paddle Physics
 ;; -----------------------------------------------------------------------------
 
-(defn -alert-invalid-move-for-paddle [{:keys [collide] :as paddle}]
-  ;; (update curr-position :z #(* (- 10 %) 0.2))
-  (println "boundary reached" (:side paddle))
-  (assoc paddle :collide true))  ; Still missing turning it back to false.
-
 (defn -move-paddle [paddle direction]
   (let [op (if (= direction :up) + -)]
     (-> paddle
@@ -66,7 +61,7 @@
     (let [new-paddle (-move-paddle paddle direction)]
       (if (-paddle-within-boundaries (:position new-paddle))
         new-paddle
-        (-alert-invalid-move-for-paddle paddle)))
+        (assoc paddle :collided true)))  ; Alert collision with wall
     (assoc paddle :direction nil)))
 
 (defn -ai-opponent-paddle
@@ -137,7 +132,7 @@
              (<= bpy (+ ppy half-paddle-height))
              (>= bpy (- ppy half-paddle-height)))    ; Ball and paddle vertically aligned y-axis
       (-> ball
-          (assoc :hit true)
+          (assoc :hit true)  ; alert hitting a paddle
           (update-in [:direction :x] -)
           (-slice-ball-speed paddle))
       ball)))
@@ -169,13 +164,20 @@
   (or (= (player-score :player-1 @scores) up-to-wins)
       (= (player-score :player-2 @scores) up-to-wins)))
 
+(defn reset-flags [elems]  ; (merge-with merge elems <reset-flags-map>)
+  (-> elems
+      (assoc-in [:paddle-1 :collided] false)
+      (assoc-in [:paddle-2 :collided] false)
+      (assoc-in [:ball :hit] false)))
+
 (defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
   (if (not (game-over?))
     ;; {:paddle-1 (-control-paddle paddle-1)
     ;; :paddle-2 (-control-paddle paddle-2)
-    {:paddle-1 (-control-paddle paddle-1)
-     :paddle-2 (-ai-opponent-paddle paddle-2 ball 0.1)
-     :ball (-update-ball ball paddle-1 paddle-2)}
+    (let [{:keys [paddle-1 paddle-2 ball]} (reset-flags elems)]
+      {:paddle-1 (-control-paddle paddle-1)
+       :paddle-2 (-ai-opponent-paddle paddle-2 ball 0.1)
+       :ball (-update-ball ball paddle-1 paddle-2)})
     elems))
 
 (defn match-score [{{x :x} :position}]
