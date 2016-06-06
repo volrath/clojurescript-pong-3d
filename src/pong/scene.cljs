@@ -100,7 +100,7 @@
 ;; Renderer
 
 (def renderer (THREE.WebGLRenderer.))
-(set! (-> renderer .-shadowMap .-enabled) true)
+(set! (-> renderer .-shadowMapEnabled) true)
 (.setSize renderer (:width canvas-size) (:height canvas-size))
 
 
