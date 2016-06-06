@@ -5,8 +5,8 @@
             [pong.utils :refer [new-vector normalize v-scalar-* v+]]))
 
 (def paddle-speed 2)
-(def ball-min-speed 1)
-(def ball-max-speed 4)
+(def ball-min-speed 2)
+(def ball-max-speed 5)
 (def ball-angle-alteration 0.6)
 (def ball-speed-alteration 0.4)
 
@@ -26,7 +26,7 @@
   (let [vx (if (= pointing-to :player-1) -1 1)]
     {:position (new-vector 0 0)
      :direction (normalize (new-vector vx (rand-nth [2 1 -1 -2]))) ; velocity's direction
-     :speed 2
+     :speed 3
      :hit false}))
 
 ;;
