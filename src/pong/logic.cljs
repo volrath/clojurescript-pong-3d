@@ -1,7 +1,7 @@
 (ns pong.logic
   (:require [pong.controls :refer [paddle-movement]]
             [pong.defs :refer [field-size up-to-wins]]
-            [pong.game-objects :refer [paddle-depth paddle-height paddle-width]]
+            [pong.game-objects :refer [ball-radius paddle-depth paddle-height paddle-width]]
             [pong.utils :refer [new-vector normalize v-scalar-* v+]]))
 
 (def paddle-speed 2)
@@ -24,7 +24,7 @@
 
 (defn -create-ball [pointing-to]
   (let [vx (if (= pointing-to :player-1) -1 1)]
-    {:position (new-vector 0 0)
+    {:position (new-vector 0 0 ball-radius)
      :direction (normalize (new-vector vx (rand-nth [2 1 -1 -2]))) ; velocity's direction
      :speed 3
      :hit false}))
