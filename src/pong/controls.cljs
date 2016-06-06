@@ -6,8 +6,12 @@
 (def paddle-movement (atom {:left nil :right nil}))
 (def code-key-map
   {87 [:left :up]
+   65 [:left :up]
    83 [:left :down]
+   68 [:left :down]
+   37 [:right :up]
    38 [:right :up]
+   39 [:right :down]
    40 [:right :down]})
 
 (defn -alter-movement [side direction]
