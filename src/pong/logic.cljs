@@ -173,7 +173,7 @@
   (if (not (game-over?))
     ;; {:paddle-1 (-control-paddle paddle-1)
     ;; :paddle-2 (-control-paddle paddle-2)
-    {:paddle-1 (-ai-opponent-paddle paddle-1 ball 0.2)
+    {:paddle-1 (-control-paddle paddle-1)
      :paddle-2 (-ai-opponent-paddle paddle-2 ball 0.1)
      :ball (-update-ball ball paddle-1 paddle-2)}
     elems))
