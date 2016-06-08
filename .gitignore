@@ -1,4 +1,4 @@
 /.nrepl-port
 out/*
 target/*
-/release/*
+release/*.out/*
