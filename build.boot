@@ -29,7 +29,6 @@
    (serve)
    (watch)
    (reload)
-   (speak)
    (cljs-repl)
    (cljs)
    (target :dir #{"target"})))
