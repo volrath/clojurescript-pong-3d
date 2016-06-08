@@ -38,4 +38,4 @@
   []
   (comp
    (cljs :optimizations :advanced)
-   (target :dir #{"target"})))
+   (target :dir #{"release"})))
