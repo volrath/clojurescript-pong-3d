@@ -32,3 +32,10 @@
    (cljs-repl)
    (cljs)
    (target :dir #{"target"})))
+
+(deftask build
+  "Builds an advanced compiled version of the app"
+  []
+  (comp
+   (cljs :optimizations :advanced)
+   (target :dir #{"release"})))
