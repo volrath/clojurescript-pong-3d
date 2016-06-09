@@ -12,7 +12,8 @@
                  [org.clojure/tools.nrepl "0.2.12"]
                  [compojure "1.5.0"]
                  [cljsjs/three "0.0.70-0"]
-                 [rum "0.9.0"]])
+                 [rum "0.9.0"]
+                 [http-kit "2.1.18"]])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
@@ -26,7 +27,10 @@
   "Launch Immediate Feedback Development Environment"
   []
   (comp
-   (serve)
+   (serve :handler 'server.web/app
+          :resource-root "target"
+          :reload true
+          :httpkit true)
    (watch)
    (reload)
    (cljs-repl)
