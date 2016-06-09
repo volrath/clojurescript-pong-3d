@@ -10,19 +10,19 @@
 (def ball-angle-alteration 0.6)
 (def ball-speed-alteration 0.4)
 
-(defn -paddle-x [pos]
+(defn- paddle-x [pos]
   (let [border-dist (/ (:width field-size) 2)]
     (if (= pos :left)
       (+ (- border-dist) paddle-width)
       (- border-dist paddle-width))))
 
-(defn -create-paddle [side]
-  {:position (new-vector (-paddle-x side) 0 paddle-depth)
+(defn- create-paddle [side]
+  {:position (new-vector (paddle-x side) 0 paddle-depth)
    :direction nil
    :side side
    :collided false})
 
-(defn -create-ball [pointing-to]
+(defn- create-ball [pointing-to]
   (let [vx (if (= pointing-to :player-1) -1 1)]
     {:position (new-vector 0 0 ball-radius)
      :direction (normalize (new-vector vx (rand-nth [2 1 -1 -2]))) ; velocity's direction
@@ -34,9 +34,9 @@
 ;; -----------------------------------------------------------------------------
 
 (def elements
-  {:ball (-create-ball (rand-nth [:player-1 :player-2]))
-   :paddle-1 (-create-paddle :left)
-   :paddle-2 (-create-paddle :right)})
+  {:ball (create-ball (rand-nth [:player-1 :player-2]))
+   :paddle-1 (create-paddle :left)
+   :paddle-2 (create-paddle :right)})
 
 (def scores (atom '()))  ; Stack of scorers, maybe later I'll add 'scoring time'
 
@@ -45,26 +45,26 @@
 ;; Paddle Physics
 ;; -----------------------------------------------------------------------------
 
-(defn -move-paddle [paddle direction]
+(defn- move-paddle [paddle direction]
   (let [op (if (= direction :up) + -)]
     (-> paddle
         (assoc :direction direction)
         (update-in [:position :y] op paddle-speed))))
 
-(defn -paddle-within-boundaries [{:keys [y]}]
+(defn- paddle-within-boundaries [{:keys [y]}]
   (let [half-boundary (* (:height field-size) 0.45)]
     (and (< y half-boundary)
          (> y (- half-boundary)))))
 
-(defn -control-paddle [{:keys [side] :as paddle}]
+(defn- control-paddle [{:keys [side] :as paddle}]
   (if-let [direction (get @paddle-movement side)]
-    (let [new-paddle (-move-paddle paddle direction)]
-      (if (-paddle-within-boundaries (:position new-paddle))
+    (let [new-paddle (move-paddle paddle direction)]
+      (if (paddle-within-boundaries (:position new-paddle))
         new-paddle
         (assoc paddle :collided true)))  ; Alert collision with wall
     (assoc paddle :direction nil)))
 
-(defn -ai-opponent-paddle
+(defn- ai-opponent-paddle
   [{{py :y} :position :as paddle}  ; paddle
    {{by :y} :position}             ; ball
    reflexes]
@@ -84,13 +84,13 @@
 ;; Ball Physics
 ;; -----------------------------------------------------------------------------
 
-(defn -scored? [x]
+(defn- scored? [x]
   (> (js/Math.abs x) (/ (:width field-size) 2)))
 
-(defn -reset-ball []
-  (-create-ball (first @scores)))
+(defn- reset-ball []
+  (create-ball (first @scores)))
 
-(defn -boundary-collision-direction-alteration [{{y :y} :position :as ball}]
+(defn- boundary-collision-direction-alteration [{{y :y} :position :as ball}]
   "If the ball collides with the world boundaries (y-axis), vy gets inverted"
   (let [half-boundary (/ (:height field-size) 2)]
     (if (or (<= y (- half-boundary))
@@ -98,7 +98,7 @@
       (update-in ball [:direction :y] -)
       ball)))
 
-(defn -slice-ball-speed
+(defn- slice-ball-speed
   [{{dy :y} :direction speed :speed :as ball}  ; ball
    {:keys [direction]}]                        ; paddle
   "Returns a new speed scalar when the ball hits the given paddle. If the ball
@@ -118,7 +118,7 @@
                               (max ball-min-speed)))))
     ball))
 
-(defn -paddle-collision-velocity-alteration
+(defn- paddle-collision-velocity-alteration
   [{{bpx :x bpy :y} :position {bdx :x} :direction :as ball}
    {{ppx :x ppy :y} :position side :side :as paddle}]
   "If the ball collides with paddles, vx gets inverted. If the ball was sliced,
@@ -134,20 +134,20 @@
       (-> ball
           (assoc :hit true)  ; alert hitting a paddle
           (update-in [:direction :x] -)
-          (-slice-ball-speed paddle))
+          (slice-ball-speed paddle))
       ball)))
 
-(defn -alter-velocity [ball paddle-1 paddle-2]
+(defn- alter-velocity [ball paddle-1 paddle-2]
   "Returns a new ball with its velocity altered"
   (-> ball
-      -boundary-collision-direction-alteration
-      (-paddle-collision-velocity-alteration paddle-1)
-      (-paddle-collision-velocity-alteration paddle-2)))
+      boundary-collision-direction-alteration
+      (paddle-collision-velocity-alteration paddle-1)
+      (paddle-collision-velocity-alteration paddle-2)))
 
-(defn -update-ball [{{old-ball-x :x} :position :as old-ball} paddle-1 paddle-2]
-  (if (-scored? old-ball-x)
-    (-reset-ball)
-    (let [new-ball (-alter-velocity old-ball paddle-1 paddle-2)
+(defn- update-ball [{{old-ball-x :x} :position :as old-ball} paddle-1 paddle-2]
+  (if (scored? old-ball-x)
+    (reset-ball)
+    (let [new-ball (alter-velocity old-ball paddle-1 paddle-2)
           {:keys [direction speed]} new-ball
           velocity (v-scalar-* direction speed)]
       (update new-ball :position v+ velocity))))
@@ -172,15 +172,15 @@
 
 (defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
   (if (not (game-over?))
-    ;; {:paddle-1 (-control-paddle paddle-1)
-    ;; :paddle-2 (-control-paddle paddle-2)
+    ;; {:paddle-1 (control-paddle paddle-1)
+    ;; :paddle-2 (control-paddle paddle-2)
     (let [{:keys [paddle-1 paddle-2 ball]} (reset-flags elems)]
-      {:paddle-1 (-control-paddle paddle-1)
-       :paddle-2 (-ai-opponent-paddle paddle-2 ball 0.1)
-       :ball (-update-ball ball paddle-1 paddle-2)})
+      {:paddle-1 (control-paddle paddle-1)
+       :paddle-2 (ai-opponent-paddle paddle-2 ball 0.1)
+       :ball (update-ball ball paddle-1 paddle-2)})
     elems))
 
 (defn match-score [{{x :x} :position}]
-  (if (and (not (game-over?)) (-scored? x))
+  (if (and (not (game-over?)) (scored? x))
     (let [scorer (if (> x 0) :player-1 :player-2)]
       (swap! scores conj scorer))))

@@ -7,7 +7,7 @@
   (let [winner-text {p1-score "You win!" p2-score "CPU wins!"}]
     (get winner-text (max p1-score p2-score))))
 
-(rum/defc -score-board < rum/reactive []
+(rum/defc score-board < rum/reactive []
   (let [scores (rum/react scores)
         p1-score (player-score :player-1 scores)
         p2-score (player-score :player-2 scores)]
@@ -33,5 +33,5 @@
 (rum/defc game-container < mount-scene [renderer stats]
   [:div
    [:div#container]
-   (-score-board)])
+   (score-board)])
 

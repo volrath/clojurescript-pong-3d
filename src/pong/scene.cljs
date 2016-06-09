@@ -108,12 +108,12 @@
 ;; Update helpers
 ;; -----------------------------------------------------------------------------
 
-(defn -update-elements-positions! [elements]
+(defn- update-elements-positions! [elements]
   (move! paddle-1 (-> elements :paddle-1 :position))
   (move! paddle-2 (-> elements :paddle-2 :position))
   (move! ball (-> elements :ball :position)))
 
-(defn -react-back-to-normal! []
+(defn- react-back-to-normal! []
   (let [p1sy (-> paddle-1 .-scale .-y)
         p1sz (-> paddle-1 .-scale .-z)
         p2sy (-> paddle-2 .-scale .-y)
@@ -123,23 +123,23 @@
     (set! (-> paddle-2 .-scale .-y) (+ p2sy (* (- 1 p2sy) 0.2)))
     (set! (-> paddle-2 .-scale .-z) (+ p2sz (* (- 1 p2sz) 0.2)))))
 
-(defn -react-paddle-to-collision! [{:keys [collided]} scene-paddle]
+(defn- react-paddle-to-collision! [{:keys [collided]} scene-paddle]
   (if collided
     (let [psz (-> scene-paddle .-scale .-z)]
       (set! (-> scene-paddle .-scale .-z) (+ psz (* (- 7 psz) 0.2))))))
 
-(defn -react-to-hit-ball! [{:keys [hit position]}]
+(defn- react-to-hit-ball! [{:keys [hit position]}]
   (if hit
     (let [scene-paddle (if (< (:x position) 0) paddle-1 paddle-2)]
       (set! (-> scene-paddle .-scale .-y) 15))))
 
-(defn -update-elements-reactions! [{p1 :paddle-1 p2 :paddle-2 ball :ball}]
-  (-react-back-to-normal!)
-  (-react-paddle-to-collision! p1 paddle-1)
-  (-react-paddle-to-collision! p2 paddle-2)
-  (-react-to-hit-ball! ball))
+(defn- update-elements-reactions! [{p1 :paddle-1 p2 :paddle-2 ball :ball}]
+  (react-back-to-normal!)
+  (react-paddle-to-collision! p1 paddle-1)
+  (react-paddle-to-collision! p2 paddle-2)
+  (react-to-hit-ball! ball))
 
-(defn -update-camera!
+(defn- update-camera!
   [{bx :x by :y}
    {px :x py :y pz :z}]
   (let [cy (-> camera .-position .-y)
@@ -153,6 +153,6 @@
                               (* -90 half-pi)))))
 
 (defn update-scene! [elements]
-  (-update-camera! (-> elements :ball :position) (-> elements :paddle-1 :position))
-  (-update-elements-positions! elements)
-  (-update-elements-reactions! elements))
+  (update-camera! (-> elements :ball :position) (-> elements :paddle-1 :position))
+  (update-elements-positions! elements)
+  (update-elements-reactions! elements))
