@@ -10,6 +10,6 @@
   (not-found "Page not found"))
 
 (defn -main []
-  (let [port 3000]
+  (let [port (Integer. (or (System/getenv "PORT") 3000))]
     (run-server app {:port port})
     (println "Started server on localhost:" port)))
