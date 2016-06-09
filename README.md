@@ -2,6 +2,8 @@
 
 Silly experiment with ClojureScript, WebGL and Three.js
 
+http://volrath.github.com/clojurescript-pong-3d/
+
 Based on: http://buildnewgames.com/webgl-threejs/
 
 ## Things I've done and things I've played with ##
