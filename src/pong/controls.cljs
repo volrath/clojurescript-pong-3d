@@ -22,8 +22,9 @@
     (alter-movement side direction)))
 
 (defn- key-released [event]
-  (if-let [side (->> event .-keyCode (get code-key-map) first)]
-    (alter-movement side nil)))
+  (if-let [[side direction] (->> event .-keyCode (get code-key-map))]
+    (if (= direction (side @paddle-movement))
+      (alter-movement side nil))))
 
 (defn controls-listen []
   (events/listen (.-body js/document)
