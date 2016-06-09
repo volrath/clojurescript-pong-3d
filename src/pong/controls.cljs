@@ -14,21 +14,21 @@
    39 [:right :down]
    40 [:right :down]})
 
-(defn -alter-movement [side direction]
+(defn- alter-movement [side direction]
   (swap! paddle-movement assoc side direction))
 
-(defn -key-pressed [event]
+(defn- key-pressed [event]
   (if-let [[side direction] (->> event .-keyCode (get code-key-map))]
-    (-alter-movement side direction)))
+    (alter-movement side direction)))
 
-(defn -key-released [event]
+(defn- key-released [event]
   (if-let [side (->> event .-keyCode (get code-key-map) first)]
-    (-alter-movement side nil)))
+    (alter-movement side nil)))
 
 (defn controls-listen []
   (events/listen (.-body js/document)
                  (.-KEYDOWN events/EventType)
-                 -key-pressed)
+                 key-pressed)
   (events/listen (.-body js/document)
                  (.-KEYUP events/EventType)
-                 -key-released))
+                 key-released))
