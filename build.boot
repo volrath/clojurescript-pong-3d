@@ -21,7 +21,11 @@
          '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]])
 
 (task-options!
- repl {:middleware '[cemerick.piggieback/wrap-cljs-repl]})
+ repl {:middleware '[cemerick.piggieback/wrap-cljs-repl]}
+ pom {:project 'pong :version "0.1.0"}
+ jar {:main 'server.web
+      :manifest {"Description" "PONG in THREE.js - Built in ClojureScript"
+                 "Url" "https://github.com/volrath/clojurescript-pong-3d"}})
 
 (deftask dev
   "Launch Immediate Feedback Development Environment"
@@ -42,4 +46,8 @@
   []
   (comp
    (cljs :optimizations :advanced)
+   (aot :namespace '#{server.web})
+   (pom)
+   (uber)
+   (jar)
    (target :dir #{"release"})))
