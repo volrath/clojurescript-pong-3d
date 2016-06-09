@@ -31,11 +31,10 @@ to me, excluding Clojure(Script) itself:
 * [RUM](https://github.com/tonsky/rum)
 * Atoms, Protocols, Records
 
-## Things I'm planning do in the future ##
+## Things I'm planning to do in the future ##
 
 * Test and start TDD
 * Websockets and Sente, I want to be able to play against friends.
 * Play a bit more with WebGL/Three.js, Particularly play with the Camera's
   position
 * More on boot-http / httpkit / Compojure
-
