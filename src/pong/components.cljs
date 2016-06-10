@@ -19,7 +19,10 @@
      [:h2#winner-board (if (game-over?)
                          "Refresh to play again"
                          (str "First to " up-to-wins " wins!"))]
-     [:h3#controls "A - move left" [:br] "D - move right"]]))
+     [:h3#controls
+      "A - move left" [:br]
+      "D - move right" [:br]
+      "SPC - Pause"]]))
 
 (defn footer []
   [:footer
