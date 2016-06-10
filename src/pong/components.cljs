@@ -5,24 +5,20 @@
 
 (defn declare-winner [p1-score p2-score]
   (let [winner-text {p1-score "You win!" p2-score "CPU wins!"}]
-    (get winner-text (max p1-score p2-score))))
+    [:h1#scores (get winner-text (max p1-score p2-score))]))
+
+(defn scoring [player-1 player-2]
+  [:h1#scores
+   [:span "You"] (str player-1 " - " player-2) [:span "CPU"]])
 
 (rum/defc score-board < rum/reactive []
   (let [scores (rum/react scores)
         p1-score (player-score :player-1 scores)
         p2-score (player-score :player-2 scores)]
     [:div#score-board
-     [:h1#scores (if (game-over?)
-                   (declare-winner p1-score p2-score)
-                   (str p1-score " - " p2-score))]
-     [:h1#title "- 3D Pong -"]
-     [:h2#winner-board (if (game-over?)
-                         "Refresh to play again"
-                         (str "First to " up-to-wins " wins!"))]
-     [:h3#controls
-      "A - move left" [:br]
-      "D - move right" [:br]
-      "SPC - Pause"]]))
+     (if (game-over?)
+       (declare-winner p1-score p2-score)
+       (scoring p1-score p2-score))a]))
 
 (defn footer []
   [:footer
@@ -41,7 +37,15 @@
 
 (rum/defc game-container < mount-scene [renderer stats]
   [:div
-   [:div#container]
    (score-board)
+   [:div#container]
+   [:h1#title "- 3D Pong -"]
+   [:h2#winner-board (if (game-over?)
+                       "Refresh to play again"
+                       (str "First to " up-to-wins " wins!"))]
+   [:h3#controls
+    "A - move left" [:br]
+    "D - move right" [:br]
+    "SPC - Pause"]
    (footer)])
 
