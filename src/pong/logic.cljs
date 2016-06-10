@@ -1,5 +1,5 @@
 (ns pong.logic
-  (:require [pong.controls :refer [paddle-movement]]
+  (:require [pong.controls :refer [paddle-movement paused?]]
             [pong.defs :refer [field-size up-to-wins]]
             [pong.game-objects :refer [ball-radius paddle-depth paddle-height paddle-width]]
             [pong.utils :refer [new-vector normalize v-scalar-* v+]]))
@@ -171,7 +171,7 @@
       (assoc-in [:ball :hit] false)))
 
 (defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
-  (if (not (game-over?))
+  (if (not (and @paused? game-over?))
     ;; {:paddle-1 (control-paddle paddle-1)
     ;; :paddle-2 (control-paddle paddle-2)
     (let [{:keys [paddle-1 paddle-2 ball]} (reset-flags elems)]

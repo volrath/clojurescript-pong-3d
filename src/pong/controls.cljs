@@ -4,6 +4,7 @@
            [goog.events KeyHandler]))
 
 (def paddle-movement (atom {:left nil :right nil}))
+(def paused? (atom false))
 (def code-key-map
   {87 [:left :up]
    65 [:left :up]
@@ -12,19 +13,25 @@
    37 [:right :up]
    38 [:right :up]
    39 [:right :down]
-   40 [:right :down]})
+   40 [:right :down]
+   32 #(swap! paused? not)})
 
 (defn- alter-movement [side direction]
   (swap! paddle-movement assoc side direction))
 
 (defn- key-pressed [event]
-  (if-let [[side direction] (->> event .-keyCode (get code-key-map))]
-    (alter-movement side direction)))
+  (if-let [action (->> event .-keyCode (get code-key-map))]
+    (if (fn? action)
+      (action)
+      (alter-movement (first action) (second action)))))
 
 (defn- key-released [event]
-  (if-let [[side direction] (->> event .-keyCode (get code-key-map))]
-    (if (= direction (side @paddle-movement))
-      (alter-movement side nil))))
+  (if-let [action (->> event .-keyCode (get code-key-map))]
+    (if (not (fn? action))
+      (let [side (first action)
+            direction (second action)]
+        (if (= direction (side @paddle-movement))
+          (alter-movement side nil))))))
 
 (defn controls-listen []
   (events/listen (.-body js/document)
