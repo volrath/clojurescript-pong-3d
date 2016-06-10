@@ -5,9 +5,11 @@
             [compojure.route :refer [files not-found resources]]
             [org.httpkit.server :refer [run-server]]))
 
+(def static-root (if (= (System/getenv "DEV_ENV") "production") "release" "target"))
+
 (defroutes app
-  (files "/" {:root "target"})
-  (resources "/" {:root "target"})
+  (files "/" {:root static-root})
+  (resources "/" {:root static-root})
   (not-found "Page not found"))
 
 (defn -main []
