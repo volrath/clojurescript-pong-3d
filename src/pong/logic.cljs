@@ -171,7 +171,7 @@
       (assoc-in [:ball :hit] false)))
 
 (defn update-movement [{:keys [paddle-1 paddle-2 ball] :as elems}]
-  (if (not (and @paused? game-over?))
+  (if (not (or @paused? (game-over?)))
     ;; {:paddle-1 (control-paddle paddle-1)
     ;; :paddle-2 (control-paddle paddle-2)
     (let [{:keys [paddle-1 paddle-2 ball]} (reset-flags elems)]
