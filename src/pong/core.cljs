@@ -1,7 +1,7 @@
 (ns pong.core
   (:require libs.stats
             [pong.components :refer [game-container]]
-            [pong.controls :refer [controls-listen paddle-movement]]
+            [pong.controls :refer [controls-listen]]
             [pong.defs :refer [canvas-size]]
             [pong.logic :refer [match-score update-movement] :as logic]
             [pong.scene :refer [camera renderer scene update-scene!]]
