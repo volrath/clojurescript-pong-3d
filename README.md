@@ -2,7 +2,7 @@
 
 Silly experiment with ClojureScript, WebGL and Three.js
 
-http://volrath.github.com/clojurescript-pong-3d/
+https://pong-3d.herokuapp.com
 
 Based on: http://buildnewgames.com/webgl-threejs/
 
@@ -32,6 +32,7 @@ to me, excluding Clojure(Script) itself:
 * Google Closure's event handling
 * [RUM](https://github.com/tonsky/rum)
 * Atoms, Protocols, Records
+* Deploying to Heroku using [heroku-buildpack-boot](https://github.com/DomKM/heroku-buildpack-boot/)
 
 ## Things I'm planning to do in the future ##
 

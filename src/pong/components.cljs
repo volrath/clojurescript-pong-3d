@@ -21,11 +21,17 @@
                          (str "First to " up-to-wins " wins!"))]
      [:h3#controls "A - move left" [:br] "D - move right"]]))
 
+(defn footer []
+  [:footer
+   [:a
+    {:href "https://github.com/volrath/clojurescript-pong-3d/" :target "_blank"}
+    "https://github.com/volrath/clojurescript-pong-3d/"]])
+
 (def mount-scene
   {:did-mount (fn [state]
                 (let [comp (:rum/react-component state)
                       main-node (js/ReactDOM.findDOMNode comp)
-                      game-node (.querySelector main-node "#container")  ; couple to `game-container` definition :/ TODO: DRY it
+                      game-node (.querySelector main-node "#container")  ; coupled to `game-container` definition :/ TODO: DRY it
                       [renderer stats] (:rum/args state)]
                   (.appendChild main-node (.-dom stats))
                   (.appendChild game-node (.-domElement renderer))))})
@@ -33,5 +39,6 @@
 (rum/defc game-container < mount-scene [renderer stats]
   [:div
    [:div#container]
-   (score-board)])
+   (score-board)
+   (footer)])
 
