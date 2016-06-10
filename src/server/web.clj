@@ -1,6 +1,7 @@
 (ns server.web
   (:gen-class)
-  (:require [compojure.core :refer [defroutes]]
+  (:require [clojure.tools.logging :as log]
+            [compojure.core :refer [defroutes]]
             [compojure.route :refer [files not-found resources]]
             [org.httpkit.server :refer [run-server]]))
 
@@ -12,4 +13,4 @@
 (defn -main []
   (let [port (Integer. (or (System/getenv "PORT") 3000))]
     (run-server app {:port port})
-    (println "Started server on localhost:" port)))
+    (log/info "Started server on localhost:" port)))

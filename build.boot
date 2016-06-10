@@ -13,7 +13,8 @@
                  [compojure "1.5.0"]
                  [cljsjs/three "0.0.70-0"]
                  [rum "0.9.0"]
-                 [http-kit "2.1.18"]])
+                 [http-kit "2.1.18"]
+                 [org.clojure/tools.logging "0.3.1"]])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
