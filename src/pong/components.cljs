@@ -22,14 +22,20 @@
        (scoring p1-score p2-score))]))
 
 (def slider
-  (rum/element js/ReactSlider
-               {}
-               #js {:defaultValue @opponent-reflexes :pearling true :max 9 :withBars true}))
+  (rum/element
+   js/ReactSlider
+   {}
+   #js {:defaultValue @opponent-reflexes
+        :min 1
+        :max 9
+        :withBars true
+        :onChange #(reset! opponent-reflexes %)}))
 
-(defn reflexes-slider []
+(rum/defc reflexes-slider < rum/reactive []
   [:div#reflexes-slider
-   (str "Change opponent's difficulty: " @opponent-reflexes)
+   (str "Opponent's Difficulty: " (rum/react opponent-reflexes))
    slider])
+
 
 (defn footer []
   [:footer
