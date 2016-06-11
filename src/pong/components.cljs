@@ -18,7 +18,17 @@
     [:div#score-board
      (if (game-over?)
        (declare-winner p1-score p2-score)
-       (scoring p1-score p2-score))a]))
+       (scoring p1-score p2-score))]))
+
+(def slider
+  (rum/element js/ReactSlider
+               {}
+               #js {:defaultValue @opponent-reflexes :pearling true :max 9 :withBars true}))
+
+(defn reflexes-slider []
+  [:div#reflexes-slider
+   (str "Change opponent's difficulty: " @opponent-reflexes)
+   slider])
 
 (defn footer []
   [:footer
@@ -39,6 +49,7 @@
   [:div
    (score-board)
    [:div#container]
+   (reflexes-slider)
    [:h1#title "- 3D Pong -"]
    [:h2#winner-board (if (game-over?)
                        "Refresh to play again"
