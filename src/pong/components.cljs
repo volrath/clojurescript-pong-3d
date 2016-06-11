@@ -1,6 +1,7 @@
 (ns pong.components
-  (:require [pong.defs :refer [up-to-wins]]
-            [pong.logic :refer [game-over? player-score scores]]
+  (:require cljsjs.react-slider
+            [pong.defs :refer [up-to-wins]]
+            [pong.logic :refer [game-over? player-score scores opponent-reflexes]]
             [rum.core :as rum]))
 
 (defn declare-winner [p1-score p2-score]
