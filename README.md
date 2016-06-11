@@ -33,6 +33,7 @@ to me, excluding Clojure(Script) itself:
 * [RUM](https://github.com/tonsky/rum)
 * Atoms, Protocols, Records
 * Deploying to Heroku using [heroku-buildpack-boot](https://github.com/DomKM/heroku-buildpack-boot/)
+* Add [a new js package](https://github.com/cljsjs/packages/tree/master/react-slider) to Cljsjs
 
 ## Things I'm planning to do in the future ##
 

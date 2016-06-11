@@ -12,6 +12,7 @@
                  [org.clojure/tools.nrepl "0.2.12"]
                  [compojure "1.5.0"]
                  [cljsjs/three "0.0.70-0"]
+                 [cljsjs/react-slider "0.6.1-0"]
                  [rum "0.9.0"]
                  [http-kit "2.1.18"]
                  [org.clojure/tools.logging "0.3.1"]])
