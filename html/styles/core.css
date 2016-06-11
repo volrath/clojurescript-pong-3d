@@ -1,17 +1,16 @@
 body { background-color: black; font-family: Segoe UI, Helvetica, Ubuntu, sans-serif; color: white; text-align: center }
 a { color: white }
-#container {  background-color: black; width: 640px; height: 360px; margin: 0 auto 48px; }
+#container {  background-color: black; width: 640px; height: 360px; margin: 0 auto 24px; }
 #scores { font-size:600%;  padding:0;  margin:0; color: white; }
 #scores span { font-size: 50%; margin: 0 20px 0; position: relative; top: -15px }
 #title { background-color: white; color: black; }
 
-.slider { margin: auto; width: 100%; max-width: 500px; height: 50px; border: 1px solid grey; }
+.slider { margin: 10px auto; width: 100%; max-width: 500px; height: 50px }
 .slider .bar { top: 20px; height: 10px; }
-.slider .handle { top: 1px; width: 50px; height: 48px; line-height: 48px; }
+.slider .handle { top: 1px; width: 20px; height: 48px; line-height: 48px; }
 
 .handle { font-size: 0.9em; text-align: center; background-color: white; color: black; cursor: pointer; }
 .handle.active { background-color: grey; }
 
-.bar { position: relative; background: #ddd; }
-.bar.bar-1 { background: #f00; }
-.bar.bar-0 { background: #0f0; }
+.bar.bar-0 { background: #f00; }
+.bar.bar-1 { background: #0f0; }
