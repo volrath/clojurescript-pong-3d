@@ -1,8 +1,8 @@
-(ns pong.logic
-  (:require [pong.controls :refer [paddle-movement paused?]]
-            [pong.defs :refer [field-size up-to-wins]]
-            [pong.game-objects :refer [ball-radius paddle-depth paddle-height paddle-width]]
-            [pong.utils :refer [new-vector normalize v-scalar-* v+]]))
+(ns pong.game.logic
+  (:require [pong.frontend.controls :refer [paddle-movement paused?]]
+            [pong.frontend.game-objects :refer [ball-radius paddle-depth paddle-height paddle-width]]
+            [pong.game.defs :refer [field-size up-to-wins]]
+            [pong.game.utils :refer [new-vector normalize v-scalar-* v+]]))
 
 (def opponent-reflexes (atom 3))
 (def paddle-speed 2)

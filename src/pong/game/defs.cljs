@@ -1,4 +1,4 @@
-(ns pong.defs)
+(ns pong.game.defs)
 
 (def up-to-wins 7)
 (def canvas-size {:width 640 :height 360})

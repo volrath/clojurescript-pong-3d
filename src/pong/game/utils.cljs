@@ -1,4 +1,4 @@
-(ns pong.utils)
+(ns pong.game.utils)
 
 (defn log-position [{:keys [x y z]}]
   (.trace js/console (str "X: " x " Y: " y " Z: " z)))

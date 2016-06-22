@@ -1,4 +1,4 @@
-(ns server.web
+(ns pong.server.web
   (:gen-class)
   (:require [clojure.tools.logging :as log]
             [org.httpkit.server :refer [run-server]]

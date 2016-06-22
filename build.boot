@@ -26,7 +26,7 @@
 (task-options!
  repl {:middleware '[cemerick.piggieback/wrap-cljs-repl]}
  pom {:project 'pong :version "0.1.0"}
- jar {:main 'server.web
+ jar {:main 'pong.server.web
       :manifest {"Description" "PONG in THREE.js - Built in ClojureScript"
                  "Url" "https://github.com/volrath/clojurescript-pong-3d"}})
 
@@ -34,7 +34,7 @@
   "Launch Immediate Feedback Development Environment"
   []
   (comp
-   (serve :handler 'server.web/app
+   (serve :handler 'pong.server.web/app
           :resource-root "target"
           :reload true
           :httpkit true)
@@ -49,7 +49,7 @@
   []
   (comp
    (cljs :optimizations :advanced)
-   (aot :namespace '#{server.web})
+   (aot :namespace '#{pong.server.web})
    (pom)
    (uber)
    (jar)

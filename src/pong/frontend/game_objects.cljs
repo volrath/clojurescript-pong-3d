@@ -1,6 +1,6 @@
-(ns pong.game-objects
+(ns pong.frontend.game-objects
   (:require cljsjs.three
-            [pong.defs :refer [field-size]]))
+            [pong.game.defs :refer [field-size]]))
 
 (def ball-radius 5)
 (def ball-geometry (js/THREE.SphereGeometry. ball-radius 6 6))  ; radius, segments, rings

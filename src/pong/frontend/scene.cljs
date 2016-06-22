@@ -1,8 +1,9 @@
-(ns pong.scene
+(ns pong.frontend.scene
   (:require cljsjs.three
-            [pong.defs :refer [canvas-size]]
-            [pong.game-objects :refer [ball ground paddle-1 paddle-2 pillars plane table]]
-            [pong.utils :refer [log-position]]))
+            libs.stats
+            [pong.frontend.game-objects :refer [ball ground paddle-1 paddle-2 pillars plane table]]
+            [pong.game.defs :refer [canvas-size]]
+            [pong.game.utils :refer [log-position]]))
 
 (def THREE js/THREE)
 
@@ -156,3 +157,5 @@
   (update-camera! (-> elements :ball :position) (-> elements :paddle-1 :position))
   (update-elements-positions! elements)
   (update-elements-reactions! elements))
+
+(def stats (js/Stats))

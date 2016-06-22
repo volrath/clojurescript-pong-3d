@@ -1,4 +1,4 @@
-(ns pong.controls
+(ns pong.frontend.controls
   (:require [goog.events :as events])
   (:import [goog.events.EventType]
            [goog.events KeyHandler]))

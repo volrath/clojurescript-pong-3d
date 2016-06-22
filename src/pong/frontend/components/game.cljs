@@ -1,7 +1,9 @@
-(ns pong.components
+(ns pong.frontend.components.game
   (:require cljsjs.react-slider
-            [pong.defs :refer [up-to-wins]]
-            [pong.logic :refer [game-over? player-score scores opponent-reflexes]]
+            [pong.frontend.scene :refer [renderer stats]]
+            [pong.game.defs :refer [up-to-wins]]
+            [pong.game.logic :refer [game-over? player-score scores opponent-reflexes]]
+            [pong.game.loop :refer [main-loop]]
             [rum.core :as rum]))
 
 (defn declare-winner [p1-score p2-score]
@@ -43,16 +45,20 @@
     {:href "https://github.com/volrath/clojurescript-pong-3d/" :target "_blank"}
     "https://github.com/volrath/clojurescript-pong-3d/"]])
 
+;;
+;; Game container
+;;
+
 (def mount-scene
   {:did-mount (fn [state]
                 (let [comp (:rum/react-component state)
                       main-node (js/ReactDOM.findDOMNode comp)
-                      game-node (.querySelector main-node "#container")  ; coupled to `game-container` definition :/ TODO: DRY it
-                      [renderer stats] (:rum/args state)]
+                      game-node (.querySelector main-node "#container")]  ; coupled to `game-container` definition :/ TODO: DRY it                  
                   (.appendChild main-node (.-dom stats))
-                  (.appendChild game-node (.-domElement renderer))))})
+                  (.appendChild game-node (.-domElement renderer))
+                  (main-loop)))})
 
-(rum/defc game-container < mount-scene [renderer stats]
+(rum/defc game-container < mount-scene []
   [:div
    (score-board)
    [:div#container]
