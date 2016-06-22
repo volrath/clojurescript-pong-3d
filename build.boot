@@ -16,7 +16,8 @@
                  [http-kit "2.1.18"]
                  [org.clojure/tools.logging "0.3.1"]
                  [com.domkm/silk "0.1.2"]
-                 [ring/ring-core "1.5.0"]])
+                 [ring/ring-core "1.5.0"]
+                 [kibu/pushy "0.3.6"]])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
