@@ -17,7 +17,9 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [com.domkm/silk "0.1.2"]
                  [ring/ring-core "1.5.0"]
-                 [kibu/pushy "0.3.6"]])
+                 [kibu/pushy "0.3.6"]
+                 [com.taoensso/sente "1.8.1"]
+                 [ring/ring-anti-forgery "1.0.1"]])
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
